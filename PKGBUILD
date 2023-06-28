@@ -23,15 +23,14 @@ prepare() {
 
 build() {
   rm -rf build
-  arch-meson "${srcdir}/${pkgname}" build 
+  arch-meson "${srcdir}/${pkgname}" build
   meson compile -C build
 }
 
 package() {
   DESTDIR="${pkgdir}" ninja -C build install
   install -Dm644 "${srcdir}/${pkgname}"/org.droidian.Flashlightd.service ${pkgdir}/usr/lib/systemd/user/flashlightd.service
-  mkdir -p ${pkgdir}/usr/lib/systemd/user/gnome-session.target.wants/
+  mkdir -p ${pkgdir}/usr/lib/systemd/user/default.target.wants
   sed -i 's#/usr/libexec/flashlightd#/usr/lib/flashlightd#g' ${pkgdir}/usr/lib/systemd/user/flashlightd.service
-  ln -s /usr/lib/systemd/user/flashlightd.service ${pkgdir}/usr/lib/systemd/user/gnome-session.target.wants/flashlightd.service
+  ln -s /usr/lib/systemd/user/flashlightd.service ${pkgdir}/usr/lib/systemd/user/default.target.wants/flashlightd.service
 }
-
